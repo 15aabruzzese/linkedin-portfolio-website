@@ -316,7 +316,7 @@ function About() {
           <div className="profile-summary">
             <div className="portrait-card hero-headshot about-headshot">
               <img
-                src="/assets/photos/optimized/andrew-sunset.jpg"
+                src="assets/photos/optimized/andrew-sunset.jpg"
                 alt="Professional portrait of Andrew Abruzzese"
                 loading="lazy"
                 decoding="async"
