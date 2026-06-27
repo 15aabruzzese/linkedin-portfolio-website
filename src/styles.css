@@ -681,6 +681,7 @@ h1 {
   display: grid;
   gap: 16px;
   align-content: start;
+  --eks-flow-card-width: 232px;
 }
 
 .eks-flow-box {
@@ -727,9 +728,13 @@ h1 {
   display: grid;
   gap: 10px;
   justify-items: center;
+  width: 100%;
 }
 
 .eks-step-arrow {
+  display: block;
+  width: 100%;
+  text-align: center;
   color: rgba(15, 23, 42, 0.55);
   font-size: 1.2rem;
   font-weight: 800;
@@ -739,10 +744,24 @@ h1 {
   line-height: 1;
 }
 
-.eks-static-node {
-  min-width: 90px;
+.eks-inline-card-wrap {
+  width: min(100%, var(--eks-flow-card-width));
   display: grid;
   justify-items: center;
+  gap: 10px;
+}
+
+.eks-static-node {
+  width: min(100%, var(--eks-flow-card-width));
+  min-height: 98px;
+  padding: 14px 12px;
+  border: 1px solid rgba(216, 226, 230, 0.96);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 12px 24px rgba(22, 35, 48, 0.08);
+  display: grid;
+  justify-items: center;
+  align-content: center;
   gap: 10px;
   text-align: center;
 }
@@ -1050,12 +1069,12 @@ h1 {
 }
 
 .eks-card.compact-flow-card {
-  width: 100%;
+  width: min(100%, var(--eks-flow-card-width));
   min-height: 98px;
 }
 
 .eks-card.controller-card {
-  width: 100%;
+  width: min(100%, var(--eks-flow-card-width));
   max-width: none;
 }
 
