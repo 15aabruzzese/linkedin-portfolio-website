@@ -3,29 +3,42 @@ import { createRoot } from "react-dom/client";
 import {
   ArrowLeft,
   ArrowRight,
+  BadgeCheck,
   Boxes,
+  Cable,
   CheckCircle2,
   ChevronRight,
   CloudCog,
+  Cloudy,
   Code2,
+  Cpu,
   Container,
   Database,
+  Fingerprint,
   Github,
   GitPullRequest,
   HeartPulse,
+  KeyRound,
   Linkedin,
   Mail,
   MapPin,
+  Network,
   PackageCheck,
+  PackageOpen,
+  Radar,
   Rocket,
+  Route,
   ServerCog,
   ShieldCheck,
+  ShieldEllipsis,
   Terminal,
+  Waypoints,
   Workflow
 } from "lucide-react";
 import "./styles.css";
 import {
   contact,
+  eksLayers,
   experience,
   featuredProject,
   photos,
@@ -46,6 +59,29 @@ const iconMap = {
   production: CheckCircle2
 };
 
+const architectureIconMap = {
+  dns: Route,
+  shield: ShieldEllipsis,
+  loadbalancer: Waypoints,
+  ingress: Radar,
+  controlplane: Cloudy,
+  nodes: Cpu,
+  autoscaling: Rocket,
+  addons: PackageOpen,
+  rbac: BadgeCheck,
+  pods: Container,
+  services: Cable,
+  helm: Boxes,
+  vault: KeyRound,
+  identity: Fingerprint,
+  data: Database,
+  config: Code2,
+  network: Network,
+  transit: Waypoints,
+  observability: HeartPulse,
+  operations: CheckCircle2
+};
+
 const interactiveSelector = [
   "a",
   "button",
@@ -55,6 +91,8 @@ const interactiveSelector = [
   ".project-panel",
   ".pipeline-detail",
   ".pipeline-step",
+  ".eks-layer",
+  ".eks-component",
   ".carousel",
   ".profile-summary",
   ".contact-links",
@@ -160,6 +198,7 @@ function Hero() {
         </a>
         <div className="nav-links">
           <a href="#about">About</a>
+          <a href="#eks-architecture">EKS</a>
           <a href="#pipeline">Pipeline</a>
           <a href="#experience">Experience</a>
           <a href="#contact">Contact</a>
@@ -337,6 +376,98 @@ function About() {
   );
 }
 
+function EksArchitecture() {
+  const [activeLayer, setActiveLayer] = useState(0);
+  const [activeComponent, setActiveComponent] = useState(0);
+  const currentLayer = eksLayers[activeLayer];
+  const currentComponent = currentLayer.components[activeComponent];
+  const ActiveIcon = architectureIconMap[currentComponent.icon];
+
+  const activateLayer = (layerIndex, componentIndex = 0) => {
+    setActiveLayer(layerIndex);
+    setActiveComponent(componentIndex);
+  };
+
+  const activateComponent = (layerIndex, componentIndex) => {
+    setActiveLayer(layerIndex);
+    setActiveComponent(componentIndex);
+  };
+
+  return (
+    <section className="section eks-section" id="eks-architecture">
+      <div className="section-heading">
+        <span className="section-kicker">Cluster Overview</span>
+        <h2>Interactive EKS microservice deployment map</h2>
+        <p>
+          A layered view of how traffic, workloads, networking, secrets, and operations
+          fit together in a production Kubernetes platform.
+        </p>
+      </div>
+
+      <div className="eks-layout">
+        <div className="eks-layers" aria-label="EKS architecture layers">
+          {eksLayers.map((layer, layerIndex) => (
+            <section
+              key={layer.name}
+              className={`eks-layer ${activeLayer === layerIndex ? "active" : ""}`}
+            >
+              <button
+                type="button"
+                className="eks-layer-header"
+                onMouseEnter={() => activateLayer(layerIndex)}
+                onFocus={() => activateLayer(layerIndex)}
+                onClick={() => activateLayer(layerIndex)}
+                aria-expanded={activeLayer === layerIndex}
+              >
+                <span className="eks-layer-name">{layer.name}</span>
+                <span className="eks-layer-description">{layer.description}</span>
+              </button>
+
+              <div className="eks-component-grid">
+                {layer.components.map((component, componentIndex) => {
+                  const Icon = architectureIconMap[component.icon];
+                  const isActive = activeLayer === layerIndex && activeComponent === componentIndex;
+
+                  return (
+                    <button
+                      key={component.title}
+                      type="button"
+                      className={`eks-component ${isActive ? "active" : ""}`}
+                      onMouseEnter={() => activateComponent(layerIndex, componentIndex)}
+                      onFocus={() => activateComponent(layerIndex, componentIndex)}
+                      onClick={() => activateComponent(layerIndex, componentIndex)}
+                      aria-pressed={isActive}
+                    >
+                      <span className="eks-component-icon">
+                        <Icon size={18} aria-hidden="true" />
+                      </span>
+                      <span className="eks-component-title">{component.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <article className="pipeline-detail eks-detail" aria-live="polite">
+          <div className="detail-icon">
+            <ActiveIcon size={28} aria-hidden="true" />
+          </div>
+          <span className="detail-label">{currentLayer.name}</span>
+          <h3>{currentComponent.title}</h3>
+          <p>{currentComponent.detail}</p>
+          <div className="detail-tags">
+            {currentComponent.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function Pipeline() {
   const [active, setActive] = useState(0);
   const activeStep = pipelineSteps[active];
@@ -493,6 +624,7 @@ function App() {
       <Hero />
       <main>
         <About />
+        <EksArchitecture />
         <Pipeline />
         <Experience />
         <Skills />

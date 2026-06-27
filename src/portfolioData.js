@@ -153,6 +153,179 @@ export const pipelineSteps = [
   }
 ];
 
+export const eksLayers = [
+  {
+    name: "Edge & Entry",
+    description: "The north-south path that receives traffic and gets it safely into the cluster.",
+    components: [
+      {
+        title: "Route 53 DNS",
+        icon: "dns",
+        detail:
+          "Public DNS records route traffic to the environment entrypoint and make cutovers, failover, and certificate-backed hostnames manageable.",
+        tags: ["DNS", "hostnames", "routing"]
+      },
+      {
+        title: "AWS WAF / Shield",
+        icon: "shield",
+        detail:
+          "Edge protection filters common web attacks, rate-limits abusive traffic, and adds another security layer before requests ever reach the cluster.",
+        tags: ["WAF", "DDoS", "rate limits"]
+      },
+      {
+        title: "Application Load Balancer",
+        icon: "loadbalancer",
+        detail:
+          "The ALB terminates TLS, applies listener rules, and forwards traffic into Kubernetes ingress targets for service-level routing.",
+        tags: ["ALB", "TLS", "listeners"]
+      },
+      {
+        title: "Ingress Controller",
+        icon: "ingress",
+        detail:
+          "The ingress controller translates Kubernetes ingress resources into cloud load balancer behavior so applications can expose stable, policy-driven endpoints.",
+        tags: ["Ingress", "rules", "paths"]
+      }
+    ]
+  },
+  {
+    name: "Platform Core",
+    description: "Managed control-plane services and cluster-level operators that define how workloads run.",
+    components: [
+      {
+        title: "EKS Control Plane",
+        icon: "controlplane",
+        detail:
+          "AWS manages the Kubernetes API server, etcd, and scheduler backbone, giving the cluster a reliable control layer without self-hosting the masters.",
+        tags: ["API server", "etcd", "managed"]
+      },
+      {
+        title: "Managed Node Groups",
+        icon: "nodes",
+        detail:
+          "Worker nodes provide the compute for pods while letting teams standardize AMIs, scaling behavior, and patching across environments.",
+        tags: ["EC2", "workers", "scaling"]
+      },
+      {
+        title: "Cluster Autoscaler / Karpenter",
+        icon: "autoscaling",
+        detail:
+          "Autoscaling adds or removes nodes based on pending workloads so the platform can stay efficient without starving deployments.",
+        tags: ["capacity", "binpacking", "efficiency"]
+      },
+      {
+        title: "Core Add-ons",
+        icon: "addons",
+        detail:
+          "Services like CoreDNS, kube-proxy, VPC CNI, and metrics collection keep networking, service discovery, and scheduling healthy inside the cluster.",
+        tags: ["CoreDNS", "CNI", "metrics"]
+      }
+    ]
+  },
+  {
+    name: "Workloads & Release",
+    description: "The application plane where services are deployed, configured, and promoted.",
+    components: [
+      {
+        title: "Namespaces & RBAC",
+        icon: "rbac",
+        detail:
+          "Namespaces segment environments and teams, while RBAC keeps deployment permissions scoped to the right people and automation identities.",
+        tags: ["multi-team", "least privilege", "access"]
+      },
+      {
+        title: "Deployments & Pods",
+        icon: "pods",
+        detail:
+          "Deployments manage desired state, replicas, and rollout strategy while pods run the actual microservice containers and sidecars.",
+        tags: ["replicas", "rollouts", "containers"]
+      },
+      {
+        title: "Services & Mesh Boundaries",
+        icon: "services",
+        detail:
+          "Cluster services provide stable internal discovery and traffic routing between microservices, regardless of where individual pods land.",
+        tags: ["service discovery", "east-west", "resilience"]
+      },
+      {
+        title: "Helm Release Layer",
+        icon: "helm",
+        detail:
+          "Helm packages templates, values, and environment overrides so the same application can be deployed consistently across lower and production environments.",
+        tags: ["charts", "values", "promotion"]
+      }
+    ]
+  },
+  {
+    name: "Secrets, Data & Identity",
+    description: "The dependency layer that keeps configuration, credentials, and shared services under control.",
+    components: [
+      {
+        title: "HashiCorp Vault",
+        icon: "vault",
+        detail:
+          "Vault brokers secrets centrally so applications fetch short-lived credentials and sensitive values without hard-coding them into images or manifests.",
+        tags: ["secrets", "dynamic creds", "rotation"]
+      },
+      {
+        title: "IRSA / IAM Roles",
+        icon: "identity",
+        detail:
+          "IAM Roles for Service Accounts give workloads cloud permissions through federated identity, avoiding static AWS keys in containers.",
+        tags: ["IRSA", "IAM", "federation"]
+      },
+      {
+        title: "PostgreSQL / Redis",
+        icon: "data",
+        detail:
+          "Stateful dependencies live outside the ephemeral pod lifecycle and are wired in through service configuration, network policy, and secret-backed credentials.",
+        tags: ["PostgreSQL", "Redis", "state"]
+      },
+      {
+        title: "ConfigMaps & Secret Sync",
+        icon: "config",
+        detail:
+          "Runtime configuration is injected through Kubernetes-native objects so services can be tuned without rebuilding container images.",
+        tags: ["ConfigMap", "external secrets", "runtime"]
+      }
+    ]
+  },
+  {
+    name: "Network, Security & Operations",
+    description: "The connective tissue that makes enterprise traffic, observability, and recovery production-ready.",
+    components: [
+      {
+        title: "VPC & Private Subnets",
+        icon: "network",
+        detail:
+          "Private subnets, routing tables, and security groups isolate cluster resources while still allowing controlled access to shared enterprise services.",
+        tags: ["VPC", "subnets", "security groups"]
+      },
+      {
+        title: "Transit Gateway",
+        icon: "transit",
+        detail:
+          "Transit Gateway connects the cluster VPC to enterprise networks, shared services, and upstream platforms without hand-managing one-off peering sprawl.",
+        tags: ["TGW", "east-west", "enterprise"]
+      },
+      {
+        title: "Observability Stack",
+        icon: "observability",
+        detail:
+          "Metrics, logs, traces, dashboards, and alerts turn runtime behavior into something teams can actually operate before incidents become visible to users.",
+        tags: ["Grafana", "logs", "alerts"]
+      },
+      {
+        title: "Backup, DR & Runbooks",
+        icon: "operations",
+        detail:
+          "Snapshot strategy, restore paths, disaster recovery posture, and clear runbooks define how the platform behaves when something fails for real.",
+        tags: ["backup", "DR", "runbooks"]
+      }
+    ]
+  }
+];
+
 export const experience = [
   {
     company: "Marriott International",
