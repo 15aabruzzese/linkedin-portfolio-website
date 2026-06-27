@@ -155,56 +155,98 @@ export const pipelineSteps = [
 
 export const eksLayers = [
   {
-    name: "Edge & Entry",
-    description: "The north-south path that receives traffic and gets it safely into the cluster.",
+    name: "Ingress & Entry",
+    description: "How production traffic enters AWS and reaches Kubernetes services.",
     components: [
       {
-        title: "Route 53 DNS",
+        title: "Internet / Route 53",
         icon: "dns",
         detail:
-          "Public DNS records route traffic to the environment entrypoint and make cutovers, failover, and certificate-backed hostnames manageable.",
-        tags: ["DNS", "hostnames", "routing"]
+          "Public hostnames resolve through Route 53 and direct users to the internet-facing entrypoint for the platform.",
+        tags: ["Route 53", "DNS", "ingress"]
       },
       {
-        title: "AWS WAF / Shield",
+        title: "AWS WAF (Optional)",
         icon: "shield",
         detail:
-          "Edge protection filters common web attacks, rate-limits abusive traffic, and adds another security layer before requests ever reach the cluster.",
-        tags: ["WAF", "DDoS", "rate limits"]
+          "Optional WAF policies inspect and filter requests before they reach the public application load balancer.",
+        tags: ["WAF", "filtering", "edge security"]
       },
       {
-        title: "Application Load Balancer",
+        title: "Public ALB",
         icon: "loadbalancer",
         detail:
-          "The ALB terminates TLS, applies listener rules, and forwards traffic into Kubernetes ingress targets for service-level routing.",
-        tags: ["ALB", "TLS", "listeners"]
+          "A public Application Load Balancer spans public subnets across availability zones, terminates TLS, and forwards requests toward Kubernetes ingress.",
+        tags: ["ALB", "TLS", "public subnets"]
       },
       {
-        title: "Ingress Controller",
+        title: "AWS Load Balancer Controller",
         icon: "ingress",
         detail:
-          "The ingress controller translates Kubernetes ingress resources into cloud load balancer behavior so applications can expose stable, policy-driven endpoints.",
-        tags: ["Ingress", "rules", "paths"]
+          "The AWS Load Balancer Controller reconciles Kubernetes ingress and service resources into AWS load balancer configuration.",
+        tags: ["controller", "ALB", "reconciliation"]
+      },
+      {
+        title: "Kubernetes Ingress",
+        icon: "ingress",
+        detail:
+          "Ingress resources define host and path routing inside the cluster and connect the external ALB path to internal Kubernetes services.",
+        tags: ["Ingress", "routing", "hosts"]
+      },
+      {
+        title: "Kubernetes Service",
+        icon: "services",
+        detail:
+          "ClusterIP or internal service objects provide stable service discovery and load balance traffic to healthy pods across worker nodes.",
+        tags: ["Service", "ClusterIP", "east-west"]
+      },
+      {
+        title: "Kubernetes Workloads",
+        icon: "pods",
+        detail:
+          "Deployments and pods such as frontend, checkout, payment, and catalog are scheduled across private subnets in multiple availability zones.",
+        tags: ["pods", "deployments", "multi-AZ"]
       }
     ]
   },
   {
-    name: "Platform Core",
-    description: "Managed control-plane services and cluster-level operators that define how workloads run.",
+    name: "Cluster & Networking",
+    description: "The managed cluster, private worker nodes, and network controls that keep EKS running safely.",
     components: [
       {
         title: "EKS Control Plane",
         icon: "controlplane",
         detail:
-          "AWS manages the Kubernetes API server, etcd, and scheduler backbone, giving the cluster a reliable control layer without self-hosting the masters.",
+          "The Amazon EKS managed control plane runs outside the customer VPC and provides the Kubernetes API, etcd, and scheduling backbone.",
         tags: ["API server", "etcd", "managed"]
       },
       {
-        title: "Managed Node Groups",
+        title: "Internet Gateway",
+        icon: "network",
+        detail:
+          "The internet gateway provides north-south connectivity for public subnet resources such as the ALB and NAT gateways.",
+        tags: ["IGW", "public routing", "VPC"]
+      },
+      {
+        title: "NAT Gateway",
+        icon: "transit",
+        detail:
+          "NAT gateways in public subnets let private worker nodes reach external services such as ECR without becoming internet-addressable themselves.",
+        tags: ["NAT", "egress", "private subnets"]
+      },
+      {
+        title: "EC2 Worker Nodes",
         icon: "nodes",
         detail:
-          "Worker nodes provide the compute for pods while letting teams standardize AMIs, scaling behavior, and patching across environments.",
-        tags: ["EC2", "workers", "scaling"]
+          "Private-subnet EC2 worker nodes host Kubernetes pods in managed node groups across both availability zones.",
+        tags: ["EC2", "managed node groups", "private subnets"]
+      },
+      {
+        title: "IRSA / IAM Roles",
+        icon: "identity",
+        detail:
+          "IAM Roles for Service Accounts let pods assume fine-grained AWS permissions without storing long-lived credentials inside containers.",
+        tags: ["IRSA", "IAM", "federation"]
       },
       {
         title: "Cluster Autoscaler / Karpenter",
@@ -212,115 +254,102 @@ export const eksLayers = [
         detail:
           "Autoscaling adds or removes nodes based on pending workloads so the platform can stay efficient without starving deployments.",
         tags: ["capacity", "binpacking", "efficiency"]
-      },
-      {
-        title: "Core Add-ons",
-        icon: "addons",
-        detail:
-          "Services like CoreDNS, kube-proxy, VPC CNI, and metrics collection keep networking, service discovery, and scheduling healthy inside the cluster.",
-        tags: ["CoreDNS", "CNI", "metrics"]
       }
     ]
   },
   {
-    name: "Workloads & Release",
-    description: "The application plane where services are deployed, configured, and promoted.",
+    name: "Delivery & Platform Ops",
+    description: "How images and releases get into the cluster and how the platform is observed.",
     components: [
       {
-        title: "Namespaces & RBAC",
-        icon: "rbac",
+        title: "GitHub Actions / CI-CD",
+        icon: "deploy",
         detail:
-          "Namespaces segment environments and teams, while RBAC keeps deployment permissions scoped to the right people and automation identities.",
-        tags: ["multi-team", "least privilege", "access"]
+          "CI/CD automation validates code, builds container images, and promotes releases toward the cluster using repeatable deployment workflows.",
+        tags: ["CI/CD", "automation", "promotion"]
       },
       {
-        title: "Deployments & Pods",
-        icon: "pods",
+        title: "Amazon ECR",
+        icon: "registry",
         detail:
-          "Deployments manage desired state, replicas, and rollout strategy while pods run the actual microservice containers and sidecars.",
-        tags: ["replicas", "rollouts", "containers"]
+          "Amazon ECR stores the versioned container images that worker nodes pull during deployments.",
+        tags: ["ECR", "images", "registry"]
       },
       {
-        title: "Services & Mesh Boundaries",
-        icon: "services",
-        detail:
-          "Cluster services provide stable internal discovery and traffic routing between microservices, regardless of where individual pods land.",
-        tags: ["service discovery", "east-west", "resilience"]
-      },
-      {
-        title: "Helm Release Layer",
+        title: "Helm Release",
         icon: "helm",
         detail:
-          "Helm packages templates, values, and environment overrides so the same application can be deployed consistently across lower and production environments.",
-        tags: ["charts", "values", "promotion"]
-      }
-    ]
-  },
-  {
-    name: "Secrets, Data & Identity",
-    description: "The dependency layer that keeps configuration, credentials, and shared services under control.",
-    components: [
-      {
-        title: "HashiCorp Vault",
-        icon: "vault",
-        detail:
-          "Vault brokers secrets centrally so applications fetch short-lived credentials and sensitive values without hard-coding them into images or manifests.",
-        tags: ["secrets", "dynamic creds", "rotation"]
+          "Helm packages Kubernetes manifests and values so releases can be promoted consistently into EKS environments.",
+        tags: ["Helm", "charts", "release"]
       },
       {
-        title: "IRSA / IAM Roles",
-        icon: "identity",
-        detail:
-          "IAM Roles for Service Accounts give workloads cloud permissions through federated identity, avoiding static AWS keys in containers.",
-        tags: ["IRSA", "IAM", "federation"]
-      },
-      {
-        title: "PostgreSQL / Redis",
-        icon: "data",
-        detail:
-          "Stateful dependencies live outside the ephemeral pod lifecycle and are wired in through service configuration, network policy, and secret-backed credentials.",
-        tags: ["PostgreSQL", "Redis", "state"]
-      },
-      {
-        title: "ConfigMaps & Secret Sync",
-        icon: "config",
-        detail:
-          "Runtime configuration is injected through Kubernetes-native objects so services can be tuned without rebuilding container images.",
-        tags: ["ConfigMap", "external secrets", "runtime"]
-      }
-    ]
-  },
-  {
-    name: "Network, Security & Operations",
-    description: "The connective tissue that makes enterprise traffic, observability, and recovery production-ready.",
-    components: [
-      {
-        title: "VPC & Private Subnets",
-        icon: "network",
-        detail:
-          "Private subnets, routing tables, and security groups isolate cluster resources while still allowing controlled access to shared enterprise services.",
-        tags: ["VPC", "subnets", "security groups"]
-      },
-      {
-        title: "Transit Gateway",
-        icon: "transit",
-        detail:
-          "Transit Gateway connects the cluster VPC to enterprise networks, shared services, and upstream platforms without hand-managing one-off peering sprawl.",
-        tags: ["TGW", "east-west", "enterprise"]
-      },
-      {
-        title: "Observability Stack",
+        title: "CloudWatch / Container Insights",
         icon: "observability",
         detail:
-          "Metrics, logs, traces, dashboards, and alerts turn runtime behavior into something teams can actually operate before incidents become visible to users.",
-        tags: ["Grafana", "logs", "alerts"]
+          "CloudWatch and Container Insights collect logs, metrics, and cluster telemetry for production monitoring and troubleshooting.",
+        tags: ["CloudWatch", "logs", "metrics"]
       },
       {
-        title: "Backup, DR & Runbooks",
-        icon: "operations",
+        title: "CoreDNS",
+        icon: "addons",
         detail:
-          "Snapshot strategy, restore paths, disaster recovery posture, and clear runbooks define how the platform behaves when something fails for real.",
-        tags: ["backup", "DR", "runbooks"]
+          "CoreDNS handles cluster-internal DNS so services and pods can discover one another reliably.",
+        tags: ["CoreDNS", "DNS", "cluster service"]
+      },
+      {
+        title: "Amazon VPC CNI",
+        icon: "network",
+        detail:
+          "The Amazon VPC CNI add-on assigns VPC-routable IP addresses to pods and connects Kubernetes workloads into AWS networking.",
+        tags: ["VPC CNI", "pod IPs", "networking"]
+      },
+      {
+        title: "AWS Load Balancer Controller",
+        icon: "ingress",
+        detail:
+          "The AWS Load Balancer Controller provisions and updates the ALB and target groups from Kubernetes ingress resources, but it is not in the runtime traffic path.",
+        tags: ["controller", "ALB", "ingress"]
+      }
+    ]
+  },
+  {
+    name: "Data, Secrets & Runtime",
+    description: "Managed data services and application configuration used by the workloads.",
+    components: [
+      {
+        title: "Amazon Aurora / RDS PostgreSQL",
+        icon: "data",
+        detail:
+          "Production relational data should live in a managed PostgreSQL service such as Amazon Aurora or RDS rather than inside Kubernetes workloads.",
+        tags: ["Aurora", "RDS", "PostgreSQL"]
+      },
+      {
+        title: "Amazon ElastiCache Redis",
+        icon: "data",
+        detail:
+          "Redis caching is typically provided by Amazon ElastiCache as a managed service outside the worker-node runtime.",
+        tags: ["ElastiCache", "Redis", "cache"]
+      },
+      {
+        title: "ConfigMaps / Kubernetes Secrets",
+        icon: "config",
+        detail:
+          "Pods receive non-sensitive config from ConfigMaps and cluster-native secret material from Kubernetes Secrets where appropriate.",
+        tags: ["ConfigMap", "Kubernetes Secrets", "runtime config"]
+      },
+      {
+        title: "AWS Secrets Manager / External Secrets",
+        icon: "vault",
+        detail:
+          "External secret synchronization patterns pull credentials from AWS Secrets Manager into Kubernetes when teams do not use Vault directly.",
+        tags: ["Secrets Manager", "External Secrets", "credentials"]
+      },
+      {
+        title: "Optional Service Mesh",
+        icon: "services",
+        detail:
+          "A service mesh can be added for advanced east-west policy, mTLS, and traffic shaping, but it is optional and not required for every EKS platform.",
+        tags: ["optional", "mTLS", "traffic policy"]
       }
     ]
   }

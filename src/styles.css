@@ -665,82 +665,420 @@ h1 {
   align-items: start;
 }
 
-.eks-layout {
+.eks-diagram-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 24px;
   align-items: start;
 }
 
-.eks-layers {
+.eks-diagram-panel {
+  display: grid;
+  gap: 0;
+}
+
+.eks-sidebar {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.eks-flow-box {
+  position: relative;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 20px;
+  border: 1.5px solid rgba(203, 213, 225, 0.9);
+  box-shadow: 0 18px 36px rgba(22, 35, 48, 0.08);
   display: grid;
   gap: 16px;
 }
 
-.eks-layer {
-  border: 1px solid rgba(216, 226, 230, 0.92);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 14px 30px rgba(22, 35, 48, 0.08);
-  overflow: hidden;
+.traffic-box {
+  border-color: rgba(22, 163, 74, 0.35);
 }
 
-.eks-layer.active {
-  border-color: rgba(15, 118, 110, 0.42);
-  box-shadow: 0 18px 38px rgba(15, 78, 74, 0.12);
+.management-box {
+  border-color: rgba(59, 130, 246, 0.35);
 }
 
-.eks-layer-header {
-  width: 100%;
-  border: 0;
-  padding: 18px 20px 16px;
-  background: linear-gradient(180deg, rgba(251, 253, 254, 0.96), rgba(245, 249, 250, 0.92));
-  text-align: left;
-  cursor: pointer;
+.eks-box-title {
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-.eks-layer-name {
-  display: block;
+.traffic-title {
+  color: #15803d;
+}
+
+.management-title {
+  color: #2563eb;
+}
+
+.eks-step-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.eks-step-column {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.eks-step-arrow {
+  color: rgba(15, 23, 42, 0.55);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.eks-step-arrow.vertical {
+  line-height: 1;
+}
+
+.eks-static-node {
+  min-width: 90px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.eks-static-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
   color: var(--ink);
+  background: rgba(241, 245, 249, 0.95);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+}
+
+.eks-static-label {
+  font-size: 0.84rem;
+  font-weight: 760;
+  line-height: 1.2;
+}
+
+.eks-controller-link {
+  width: 2px;
+  height: 28px;
+  border-left: 2px dashed rgba(139, 92, 246, 0.55);
+  justify-self: center;
+}
+
+.eks-controller-note {
+  position: relative;
+  width: 100%;
+}
+
+.eks-board {
+  border: 1px solid rgba(216, 226, 230, 0.9);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 250, 252, 0.98)),
+    #fff;
+  box-shadow: var(--shadow);
+}
+
+.architecture-board {
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.eks-cloud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.eks-cloud-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.75rem;
   font-weight: 850;
-  font-size: 1rem;
 }
 
-.eks-layer-description {
-  display: block;
+.eks-aws-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #111827;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 850;
+  text-transform: lowercase;
+}
+
+.eks-control-plane-box {
+  width: min(100%, 340px);
+}
+
+.eks-vpc-board {
+  border: 2px solid rgba(22, 163, 74, 0.45);
+  border-radius: 20px;
+  background: rgba(248, 251, 252, 0.92);
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.eks-vpc-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eks-vpc-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  color: #fff;
+  background: #16a34a;
+}
+
+.eks-vpc-title {
+  font-size: 2rem;
+  font-weight: 850;
+}
+
+.eks-alb-strip {
+  position: relative;
+  padding: 12px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.6), rgba(255, 255, 255, 0.82));
+  border: 1px solid rgba(15, 118, 110, 0.18);
+}
+
+.eks-az-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.eks-zone-card {
+  border: 2px dashed rgba(96, 165, 250, 0.5);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.eks-zone-title,
+.eks-cluster-title,
+.eks-cluster-panel-title,
+.eks-managed-title {
+  font-weight: 850;
+}
+
+.eks-zone-title,
+.eks-cluster-title,
+.eks-cluster-panel-title {
+  color: #2563eb;
+}
+
+.eks-subnet-box {
+  position: relative;
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.eks-subnet-box.public {
+  border: 1.5px solid rgba(22, 163, 74, 0.28);
+  background: rgba(240, 253, 244, 0.88);
+}
+
+.eks-subnet-box.private {
+  border: 1.5px solid rgba(96, 165, 250, 0.28);
+  background: rgba(239, 246, 255, 0.88);
+}
+
+.eks-subnet-title,
+.eks-worker-group-title {
+  color: #15803d;
+  font-size: 0.95rem;
+  font-weight: 850;
+}
+
+.eks-subnet-box.private .eks-subnet-title,
+.eks-subnet-box.private .eks-worker-group-title {
+  color: #2563eb;
+}
+
+.eks-subnet-node-row {
+  display: grid;
+  gap: 12px;
+}
+
+.eks-subnet-node-row.two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.eks-zone-arrow {
+  justify-self: center;
+  color: rgba(15, 23, 42, 0.45);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.eks-worker-group {
+  border: 1.5px dashed rgba(96, 165, 250, 0.52);
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.eks-worker-chip-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.eks-worker-caption {
   color: var(--muted);
-  margin-top: 8px;
-  line-height: 1.55;
-  font-size: 0.94rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 760;
 }
 
-.eks-component-grid {
+.eks-cluster-box {
+  border: 1.5px solid rgba(96, 165, 250, 0.26);
+  border-radius: 18px;
+  background: rgba(245, 249, 255, 0.88);
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.eks-cluster-title {
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.eks-cluster-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+  gap: 14px;
+}
+
+.eks-cluster-panel,
+.eks-cluster-resources-box,
+.eks-managed-services {
+  position: relative;
+  border: 1px solid rgba(203, 213, 225, 0.75);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.eks-cluster-node-grid.addons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.eks-cluster-node-grid.workloads-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.eks-cluster-resource-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  padding: 0 20px 20px;
 }
 
-.eks-component {
-  min-height: 94px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: #fff;
-  padding: 14px;
-  text-align: left;
+.eks-managed-services {
+  border-color: rgba(22, 163, 74, 0.25);
+}
+
+.eks-managed-title {
+  color: #15803d;
+}
+
+.eks-managed-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.eks-card {
+  border: 1px solid rgba(216, 226, 230, 0.96);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
   color: var(--ink);
   cursor: pointer;
+  box-shadow: 0 12px 24px rgba(22, 35, 48, 0.08);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  text-align: center;
 }
 
-.eks-component:hover,
-.eks-component.active {
-  transform: translateY(-3px);
-  border-color: rgba(36, 88, 164, 0.44);
-  box-shadow: 0 14px 28px rgba(36, 88, 164, 0.12);
+.eks-card:hover,
+.eks-card.active {
+  transform: translateY(-2px);
+  border-color: rgba(15, 118, 110, 0.46);
+  box-shadow: 0 16px 28px rgba(15, 78, 74, 0.12);
 }
 
-.eks-component-icon {
+.eks-card.flow-card,
+.eks-card.support-card,
+.eks-card.control-plane-card,
+.eks-card.subnet-node,
+.eks-card.cluster-node,
+.eks-card.resource-node,
+.eks-card.controller-card,
+.eks-card.worker-chip {
+  padding: 14px 12px;
+}
+
+.eks-card.compact-flow-card {
+  width: 100%;
+  min-height: 98px;
+}
+
+.eks-card.controller-card {
+  width: 100%;
+  max-width: none;
+}
+
+.eks-card.wide-node,
+.eks-card.control-plane-card {
+  width: 100%;
+  text-align: left;
+}
+
+.eks-card.alb-strip-card {
+  text-align: center;
+}
+
+.eks-card.alb-strip-card .eks-card-icon {
+  margin: 0 auto 10px;
+}
+
+.eks-card.wide-node .eks-card-icon,
+.eks-card.control-plane-card .eks-card-icon {
+  margin-bottom: 10px;
+}
+
+.eks-card-icon {
   display: inline-grid;
   place-items: center;
   width: 34px;
@@ -750,15 +1088,101 @@ h1 {
   background: rgba(15, 118, 110, 0.1);
 }
 
-.eks-component-title {
+.eks-card-label {
   display: block;
-  margin-top: 12px;
+  margin-top: 10px;
+  font-size: 0.82rem;
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.24;
 }
 
-.eks-detail {
-  top: 24px;
+.eks-card-caption {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+
+.eks-card.worker-chip {
+  min-height: 88px;
+}
+
+.eks-card.worker-chip .eks-card-label {
+  font-size: 0.74rem;
+}
+
+.eks-card.managed-node {
+  min-height: 122px;
+}
+
+.eks-group-shell {
+  position: relative;
+}
+
+.eks-group-popout {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translateX(-50%) translateY(0);
+  width: min(300px, calc(100vw - 40px));
+  padding: 14px 15px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.97);
+  color: #f8fafc;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.28);
+  display: grid;
+  gap: 6px;
+  pointer-events: none;
+  z-index: 30;
+  text-align: left;
+}
+
+.eks-group-popout.group-popout-bottom {
+  top: calc(100% + 12px);
+  bottom: auto;
+}
+
+.eks-group-popout::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: rgba(15, 23, 42, 0.97) transparent transparent;
+}
+
+.eks-group-popout.group-popout-bottom::after {
+  top: auto;
+  bottom: 100%;
+  border-width: 0 8px 8px;
+  border-color: transparent transparent rgba(15, 23, 42, 0.97);
+}
+
+.eks-group-popout-layer {
+  color: #fbbf24;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.eks-group-popout-title {
+  font-size: 0.9rem;
+  font-weight: 820;
+  line-height: 1.2;
+}
+
+.eks-group-popout-body {
+  color: rgba(226, 232, 240, 0.95);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.eks-inline-popout {
+  left: 50%;
+  bottom: calc(100% + 10px);
 }
 
 .pipeline-track {
@@ -1040,7 +1464,7 @@ h1 {
 @media (max-width: 980px) {
   .hero-grid,
   .about-layout,
-  .eks-layout,
+  .eks-diagram-shell,
   .pipeline-layout,
   .project-panel,
   .contact {
@@ -1063,8 +1487,18 @@ h1 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .eks-component-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .eks-az-layout,
+  .eks-cluster-columns,
+  .eks-managed-grid,
+  .eks-cluster-node-grid.addons,
+  .eks-cluster-node-grid.workloads-grid,
+  .eks-cluster-resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .eks-cloud-header {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .skills-grid {
@@ -1116,14 +1550,51 @@ h1 {
   }
 
   .metric-grid,
-  .eks-component-grid,
   .pipeline-track,
   .skills-grid {
     grid-template-columns: 1fr;
   }
 
-  .eks-component:hover,
-  .eks-component.active {
+  .architecture-board {
+    padding: 16px;
+  }
+
+  .eks-cloud-title {
+    font-size: 1.35rem;
+  }
+
+  .eks-vpc-title {
+    font-size: 1.4rem;
+  }
+
+  .eks-step-row {
+    align-items: stretch;
+  }
+
+  .eks-step-arrow,
+  .eks-step-arrow.vertical {
+    display: none;
+  }
+
+  .eks-static-node,
+  .eks-card.compact-flow-card,
+  .eks-card.controller-card,
+  .eks-card.subnet-node,
+  .eks-card.cluster-node,
+  .eks-card.resource-node,
+  .eks-card.managed-node,
+  .eks-card.worker-chip {
+    max-width: none;
+    width: 100%;
+  }
+
+  .eks-subnet-node-row.two-up,
+  .eks-worker-chip-row {
+    grid-template-columns: 1fr;
+  }
+
+  .eks-card:hover,
+  .eks-card.active {
     transform: none;
   }
 
